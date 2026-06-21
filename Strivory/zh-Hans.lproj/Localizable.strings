@@ -1,0 +1,131 @@
+"action.cancel" = "取消";
+"action.close" = "关闭";
+"action.deselectAll" = "取消全选";
+"action.done" = "完成";
+"action.import" = "导入";
+"action.ok" = "好的";
+"action.selectAll" = "选择全部";
+"action.syncHealth" = "同步健康数据";
+
+"batches.summary" = "%d 个日期 · %@";
+"batches.title" = "CSV 导入批次";
+
+"calendar.activityAccessibility" = "%@，%@";
+"calendar.noActivityAccessibility" = "%@，无运动";
+"calendar.outsideYear" = "非本年度日期";
+
+"category.ballSports" = "球类";
+"category.boardSports" = "板类";
+"category.combat" = "格斗";
+"category.cycling" = "骑行";
+"category.dance" = "舞蹈与操课";
+"category.mindBody" = "身心训练";
+"category.other" = "其他";
+"category.outdoors" = "户外";
+"category.rowing" = "划船";
+"category.running" = "跑步";
+"category.strength" = "力量";
+"category.swimming" = "游泳";
+
+"csv.notSelected" = "未选择 CSV：%@";
+"csv.readFailure" = "无法读取 CSV：%@";
+"csv.strategy.override.detail" = "CSV 指定类型会成为当天的主运动。";
+"csv.strategy.override.title" = "CSV 覆盖同日记录";
+"csv.strategy.supplement.detail" = "已有 HealthKit 训练的日期保留健康数据。";
+"csv.strategy.supplement.title" = "仅补全缺失日";
+"csv.template" = "date,workout_type\n2025-01-01,户外跑步\n2025-01-02,力量训练\n2025-01-04,泳池游泳\n";
+"csv.template.preview" = "date,workout_type\n2025-01-01,户外跑步\n2025-01-02,力量训练";
+
+"csvError.columns" = "列数不足，无法读取日期和运动类型。";
+"csvError.date" = "日期“%@”无效或属于未来。";
+"csvError.duplicateDate" = "同一文件中日期 %@ 出现多次；请保留一条后重试。";
+"csvError.emptyFile" = "文件为空。";
+"csvError.header" = "需要 date/日期 与 workout_type/运动类型 两列。";
+"csvError.type" = "运动类型不能为空。";
+
+"csvReview.actionRequired" = "需要处理";
+"csvReview.file" = "文件";
+"csvReview.healthConflicts" = "与 HealthKit 冲突";
+"csvReview.importable" = "可导入记录";
+"csvReview.issueLine" = "第 %d 行：%@";
+"csvReview.issues" = "解析问题";
+"csvReview.navigationTitle" = "CSV 导入";
+"csvReview.previewSection" = "导入预览";
+"csvReview.samples" = "记录样例";
+"csvReview.strategy" = "策略";
+"csvReview.strategySection" = "冲突策略";
+
+"detail.durationMinutes" = "%d 分钟";
+"detail.includedWorkouts" = "采用的 Workout";
+"detail.navigationTitle" = "日期详情";
+"detail.primaryWorkout" = "每日主运动";
+"detail.source" = "数据来源";
+
+"export.defaultName" = "我";
+"export.generatedBy" = "由 Strivory 生成";
+"export.generatePNG" = "生成 PNG";
+"export.imageTitle" = "%@ 的运动年历";
+"export.navigationTitle" = "导出运动年历";
+"export.previewHint" = "选择年份后生成高清 PNG 预览。";
+"export.previewSection" = "预览";
+"export.savePhoto" = "保存到相册";
+"export.sharePNG" = "分享 PNG";
+"export.templateSection" = "海报模板";
+"export.templatePicker" = "模板";
+"export.template.editorial.title" = "年鉴";
+"export.template.editorial.detail" = "暖白纸张与舒展排版，适合沉静地回看多年的运动记录。";
+"export.template.nightAtlas.title" = "夜色图鉴";
+"export.template.nightAtlas.detail" = "深色数据图鉴，以紧凑年度带和醒目运动色彩呈现记录。";
+"export.poster.activeDays" = "活动日";
+"export.poster.kicker" = "运动记录 · %@—%@";
+"export.poster.kicker.single" = "运动记录 · %@";
+"export.poster.subtitle" = "持续运动的第 %d 年。";
+"export.yearCard.stats" = "%d / %d · %.1f%%";
+"export.nightAtlas.kicker" = "STRIVORY / 运动档案";
+"export.yearsHint" = "最新年份会显示在长图顶部；最多选择 10 年。越早年份会逐级淡化。";
+"export.yearsSection" = "导出年份";
+"export.yearToggle" = "%@ 年";
+
+"health.empty" = "尚未读取到有效的 Workout；也可以使用 CSV 补录历史记录。";
+"health.unavailable" = "此设备不支持 Apple 健康。";
+"health.updated" = "已更新 %d 条有效 Workout。";
+
+"home.slogan" = "记录一生的每一次动起来";
+"home.subtitle" = "从 Apple 健康与 CSV 汇总你的运动年历";
+"home.yearCount" = "%d 年记录";
+
+"importStart.chooseFile" = "选择 CSV 文件";
+"importStart.description" = "CSV 只需要日期和运动类型。每行代表一个确认的活动日；若与 Apple 健康同日冲突，可在导入预览中选择补全或覆盖。";
+"importStart.downloadTemplate" = "下载 CSV 模板";
+"importStart.navigationTitle" = "导入记录";
+"importStart.title" = "补录你的运动记录";
+
+"legend.accessibility" = "运动类型图例，可左右滚动";
+
+"language.english" = "English";
+"language.simplifiedChinese" = "简体中文";
+
+"photoSave.failed.message" = "请稍后重试。";
+"photoSave.failed.title" = "保存失败";
+"photoSave.imageDataFailure" = "无法生成可保存的 PNG 图片。";
+"photoSave.success.message" = "运动年历 PNG 已保存到“照片”。";
+"photoSave.success.title" = "已保存到相册";
+"photoSave.unavailable.message" = "请在系统设置中允许 Strivory 添加照片。";
+"photoSave.unavailable.title" = "无法保存";
+
+"settings.displayName" = "显示名称";
+"settings.displayNameHint" = "此名称会显示在多年长图的标题中。";
+"settings.exportSection" = "导出";
+"settings.language" = "应用语言";
+"settings.languageHint" = "此设置同时影响 Strivory 界面与导出图片的语言。";
+"settings.languageSection" = "语言";
+"settings.navigationTitle" = "设置";
+"settings.privacyLocal" = "Workout 与 CSV 数据仅在本机处理。";
+"settings.privacyNoWrite" = "Strivory 不会将记录写回 Apple 健康。";
+"settings.privacySection" = "隐私";
+
+"source.csv" = "CSV 导入";
+"source.health" = "Apple 健康";
+
+"year.card.stats" = "%d / %d 活动日 · %.1f%%";
+"year.card.title" = "%@ 运动年历";
