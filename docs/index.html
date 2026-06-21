@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strivory</title>
+  <style>
+    :root { color-scheme: light dark; --ink:#1b1c1f; --muted:#696c74; --card:#f7f7f8; --accent:#2878c8; }
+    * { box-sizing:border-box; } body { margin:0; font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:#fff; }
+    main { width:min(720px,calc(100% - 40px)); margin:0 auto; padding:72px 0; } h1 { font-size:clamp(40px,8vw,68px); letter-spacing:-.06em; margin:0; } p.lead { color:var(--muted); font-size:20px; margin:12px 0 40px; }
+    nav { display:grid; gap:14px; } a { color:inherit; text-decoration:none; } .card { display:block; padding:22px 24px; border-radius:18px; background:var(--card); transition:transform .15s ease; } .card:hover { transform:translateY(-2px); } .card strong { display:block; font-size:20px; } .card span { color:var(--muted); }
+    footer { color:var(--muted); font-size:14px; margin-top:52px; }
+    @media (prefers-color-scheme: dark) { :root { --ink:#f3f3f4; --muted:#adb0b9; --card:#202126; } body { background:#111216; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Strivory</h1>
+    <p class="lead">记录一生的每一次动起来<br>Build a lifetime of movement.</p>
+    <nav>
+      <a class="card" href="privacy.html"><strong>隐私政策 · Privacy Policy</strong><span>了解 Strivory 如何在设备本地处理运动数据。</span></a>
+      <a class="card" href="support.html"><strong>支持 · Support</strong><span>使用说明、常见问题与联系支持。</span></a>
+    </nav>
+    <footer>© 2026 Strivory</footer>
+  </main>
+</body>
+</html>
