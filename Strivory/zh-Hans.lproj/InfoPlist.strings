@@ -1,2 +1,3 @@
 "NSHealthShareUsageDescription" = "Strivory 读取你的训练记录，用于生成仅属于你的运动年历。";
+"NSHealthUpdateUsageDescription" = "Strivory 不会向 Apple 健康写入数据；此说明用于支持其 Workout 访问权限。";
 "NSPhotoLibraryAddUsageDescription" = "Strivory 将导出的运动年历保存到你的照片图库。";

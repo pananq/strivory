@@ -300,7 +300,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Strivory reads your workouts to build your private movement calendar.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Strivory does not write to Apple Health; this declaration supports its HealthKit workout access.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Strivory saves your exported movement calendar to your photo library.";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -320,14 +322,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Strivory/Strivory.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Strivory reads your workouts to build your private movement calendar.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Strivory does not write to Apple Health; this declaration supports its HealthKit workout access.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Strivory saves your exported movement calendar to your photo library.";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;

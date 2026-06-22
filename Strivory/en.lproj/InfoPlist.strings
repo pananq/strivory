@@ -1,2 +1,3 @@
 "NSHealthShareUsageDescription" = "Strivory reads your workouts to build your private movement calendar.";
+"NSHealthUpdateUsageDescription" = "Strivory does not write to Apple Health; this declaration supports its HealthKit workout access.";
 "NSPhotoLibraryAddUsageDescription" = "Strivory saves your exported movement calendar to your photo library.";
