@@ -14,6 +14,7 @@ struct StrivoryApp: App {
                     guard phase == .active else { return }
                     Task {
                         await store.requestHealthAccessAndRefresh()
+                        await store.syncICloudBackup(force: false)
                     }
                 }
         }

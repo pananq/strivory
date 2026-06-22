@@ -41,6 +41,7 @@ final class AppStore: ObservableObject {
     private static let userNameKey = "strivory.user.name"
     private static let userNameUpdatedAtKey = "strivory.user.name.updated-at"
     private static let iCloudBackupEnabledKey = "strivory.icloud-backup.enabled"
+    private static let lastAutomaticICloudBackupKey = "strivory.icloud-backup.last-automatic"
     private var deletedBatchDates: [String: Date] = [:]
     private var userNameUpdatedAt: Date
 
@@ -180,7 +181,14 @@ final class AppStore: ObservableObject {
     }
 
     func syncICloudBackup() async {
+        await syncICloudBackup(force: true)
+    }
+
+    /// Automatic backups run at most once per local calendar day. The manual
+    /// action bypasses this limit so users can protect a change immediately.
+    func syncICloudBackup(force: Bool) async {
         guard iCloudBackupEnabled, !isSyncingICloud else { return }
+        guard force || isAutomaticICloudBackupDue else { return }
         isSyncingICloud = true
         defer { isSyncingICloud = false }
         do {
@@ -189,6 +197,9 @@ final class AppStore: ObservableObject {
             hasICloudBackup = true
             iCloudBackupState = .ready(lastBackup: merged.updatedAt)
             iCloudErrorMessage = nil
+            if !force {
+                UserDefaults.standard.set(Date.now, forKey: Self.lastAutomaticICloudBackupKey)
+            }
         } catch let error as ICloudBackupError where error == .accountUnavailable {
             iCloudBackupState = .unavailable
             recordICloudFailure(error)
@@ -309,7 +320,14 @@ final class AppStore: ObservableObject {
 
     private func scheduleICloudSync() {
         guard iCloudBackupEnabled else { return }
-        Task { await syncICloudBackup() }
+        Task { await syncICloudBackup(force: false) }
+    }
+
+    private var isAutomaticICloudBackupDue: Bool {
+        guard let lastBackup = UserDefaults.standard.object(forKey: Self.lastAutomaticICloudBackupKey) as? Date else {
+            return true
+        }
+        return !Calendar.autoupdatingCurrent.isDate(lastBackup, inSameDayAs: .now)
     }
 
     private func iCloudFailureMessage(_ error: Error) -> String {

@@ -139,7 +139,7 @@
 "settings.displayNameHint" = "This name appears in the title of your exported calendar.";
 "settings.exportSection" = "Export";
 "settings.iCloudBackup" = "iCloud Backup & Restore";
-"settings.iCloudBackupHint" = "When enabled, Strivory backs up Workout snapshots it has read, CSV import batches, and your display name to your private iCloud space. You can restore them after deleting the app. Strivory never writes records back to Apple Health.";
+"settings.iCloudBackupHint" = "When enabled, Strivory backs up Workout snapshots it has read, CSV import batches, and your display name to your private iCloud space once per day while the app is active. You can restore them after deleting the app. Sync Now always creates an immediate backup. Strivory never writes records back to Apple Health.";
 "settings.iCloudSection" = "Data Backup";
 "settings.language" = "App Language";
 "settings.languageHint" = "This controls the language used by Strivory and exported images.";

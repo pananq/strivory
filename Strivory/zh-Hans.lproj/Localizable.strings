@@ -139,7 +139,7 @@
 "settings.displayNameHint" = "此名称会显示在多年长图的标题中。";
 "settings.exportSection" = "导出";
 "settings.iCloudBackup" = "iCloud 备份与恢复";
-"settings.iCloudBackupHint" = "开启后，Strivory 会将已读取的 Workout 快照、CSV 导入批次和显示名称备份到你的私有 iCloud 空间。删除 App 后可恢复；不会将记录写回 Apple 健康。";
+"settings.iCloudBackupHint" = "开启后，Strivory 会在 App 处于活跃状态时每天最多一次，将已读取的 Workout 快照、CSV 导入批次和显示名称备份到你的私有 iCloud 空间。删除 App 后可恢复；“立即同步”始终会立刻创建备份。不会将记录写回 Apple 健康。";
 "settings.iCloudSection" = "数据备份";
 "settings.language" = "应用语言";
 "settings.languageHint" = "此设置同时影响 Strivory 界面与导出图片的语言。";
