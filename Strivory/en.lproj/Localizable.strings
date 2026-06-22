@@ -98,6 +98,7 @@
 "icloud.error.genericDiagnostic" = "iCloud sync failed (%@).";
 "icloud.error.network" = "iCloud is temporarily unavailable. Check your network connection and try again.";
 "icloud.error.permission" = "This build is missing iCloud Backup permission. Reinstall the latest build from Xcode.";
+"icloud.error.serverDiagnostic" = "iCloud rejected the request: %@ (code %@).";
 "icloud.restore.action" = "Restore Backup";
 "icloud.restore.later" = "Not Now";
 "icloud.restore.message" = "This restores your workout snapshots, CSV import batches, and display name on this iPhone. You can then grant Apple Health access again to refresh current Workouts.";

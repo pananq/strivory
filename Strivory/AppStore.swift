@@ -326,8 +326,10 @@ final class AppStore: ObservableObject {
             return L.text("icloud.error.permission")
         case .badContainer:
             return L.text("icloud.error.container")
-        case .badDatabase, .invalidArguments, .serverRejectedRequest:
+        case .badDatabase:
             return L.text("icloud.error.configuration")
+        case .invalidArguments, .serverRejectedRequest:
+            return detailedCloudErrorMessage(cloudError)
         case .networkUnavailable, .networkFailure, .serviceUnavailable, .requestRateLimited, .zoneBusy, .accountTemporarilyUnavailable:
             return L.text("icloud.error.network")
         default:
@@ -339,5 +341,12 @@ final class AppStore: ObservableObject {
         let message = iCloudFailureMessage(error)
         iCloudErrorMessage = message
         healthMessage = message
+    }
+
+    private func detailedCloudErrorMessage(_ error: CKError) -> String {
+        let serverDescription = error.userInfo["CKErrorServerDescription"] as? String
+        let underlyingDescription = (error.userInfo[NSUnderlyingErrorKey] as? NSError)?.localizedDescription
+        let description = serverDescription ?? underlyingDescription ?? error.localizedDescription
+        return L.text("icloud.error.serverDiagnostic", description, String(error.code.rawValue))
     }
 }

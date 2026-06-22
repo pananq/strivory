@@ -98,6 +98,7 @@
 "icloud.error.genericDiagnostic" = "iCloud 同步失败（%@）。";
 "icloud.error.network" = "iCloud 暂时不可用，请检查网络后重试。";
 "icloud.error.permission" = "此构建缺少 iCloud 备份权限，请从 Xcode 重新安装最新版。";
+"icloud.error.serverDiagnostic" = "iCloud 拒绝了请求：%@（错误码 %@）。";
 "icloud.restore.action" = "恢复备份";
 "icloud.restore.later" = "暂不恢复";
 "icloud.restore.message" = "将在此 iPhone 上恢复你的运动记录快照、CSV 导入批次和显示名称。之后可重新授权 Apple 健康以校验最新 Workout。";
