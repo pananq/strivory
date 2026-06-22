@@ -33,7 +33,7 @@ final class HealthKitService {
                     let duration = workout.duration
                     guard duration >= 600 else { return nil }
                     let energy = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
-                    return WorkoutRecord(startDate: workout.startDate, category: Self.category(for: workout.workoutActivityType), duration: duration, activeEnergy: energy, source: .healthKit)
+                    return WorkoutRecord(id: workout.uuid, startDate: workout.startDate, category: Self.category(for: workout.workoutActivityType), duration: duration, activeEnergy: energy, source: .healthKit)
                 }
                 continuation.resume(returning: Self.deduplicated(workouts))
             }

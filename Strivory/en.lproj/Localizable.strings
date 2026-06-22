@@ -90,6 +90,21 @@
 "health.unavailable" = "Apple Health is unavailable on this device.";
 "health.updated" = "Updated %d eligible workouts.";
 
+"icloud.error.account" = "Sign in to iCloud to back up or restore.";
+"icloud.error.malformed" = "The iCloud backup could not be read.";
+"icloud.restore.action" = "Restore Backup";
+"icloud.restore.later" = "Not Now";
+"icloud.restore.message" = "This restores your workout snapshots, CSV import batches, and display name on this iPhone. You can then grant Apple Health access again to refresh current Workouts.";
+"icloud.restore.success" = "Restored %d workout snapshots and %d CSV batches from iCloud.";
+"icloud.restore.title" = "iCloud Backup Found";
+"icloud.status.checking" = "Checking iCloud…";
+"icloud.status.disabled" = "Backup is off";
+"icloud.status.failed" = "iCloud sync failed. Please try again later.";
+"icloud.status.ready" = "Synced · %@";
+"icloud.status.readyWithoutDate" = "iCloud backup is ready";
+"icloud.status.unavailable" = "This device is not signed in to iCloud.";
+"icloud.syncNow" = "Sync Now";
+
 "home.slogan" = "A lifetime of getting moving";
 "home.subtitle" = "Your movement calendar from Apple Health and CSV files";
 "home.yearCount" = "%d years";
@@ -116,11 +131,14 @@
 "settings.displayName" = "Display Name";
 "settings.displayNameHint" = "This name appears in the title of your exported calendar.";
 "settings.exportSection" = "Export";
+"settings.iCloudBackup" = "iCloud Backup & Restore";
+"settings.iCloudBackupHint" = "When enabled, Strivory backs up Workout snapshots it has read, CSV import batches, and your display name to your private iCloud space. You can restore them after deleting the app. Strivory never writes records back to Apple Health.";
+"settings.iCloudSection" = "Data Backup";
 "settings.language" = "App Language";
 "settings.languageHint" = "This controls the language used by Strivory and exported images.";
 "settings.languageSection" = "Language";
 "settings.navigationTitle" = "Settings";
-"settings.privacyLocal" = "Workout and CSV data are processed only on this device.";
+"settings.privacyLocal" = "Data stays on this device by default; when enabled, iCloud Backup stores it in your private iCloud space.";
 "settings.privacyNoWrite" = "Strivory never writes records back to Apple Health.";
 "settings.privacySection" = "Privacy";
 

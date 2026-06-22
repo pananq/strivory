@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-enum AppLanguage: String, CaseIterable, Codable, Identifiable {
+enum AppLanguage: String, CaseIterable, Codable, Identifiable, Sendable {
     case simplifiedChinese = "zh-Hans"
     case english = "en"
 
@@ -40,7 +40,7 @@ enum L {
     }
 }
 
-enum WorkoutCategory: String, CaseIterable, Codable, Identifiable, Hashable {
+enum WorkoutCategory: String, CaseIterable, Codable, Identifiable, Hashable, Sendable {
     case strength, running, cycling, swimming, ballSports, boardSports
     case outdoors, mindBody, dance, combat, rowing, other
 
@@ -99,12 +99,12 @@ enum WorkoutCategory: String, CaseIterable, Codable, Identifiable, Hashable {
     }
 }
 
-enum RecordSource: String, Codable, Hashable {
+enum RecordSource: String, Codable, Hashable, Sendable {
     case healthKit
     case csv
 }
 
-struct WorkoutRecord: Identifiable, Codable, Hashable {
+struct WorkoutRecord: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     let startDate: Date
     let category: WorkoutCategory
@@ -124,7 +124,7 @@ struct WorkoutRecord: Identifiable, Codable, Hashable {
     }
 }
 
-enum CSVImportStrategy: String, Codable, CaseIterable, Identifiable {
+enum CSVImportStrategy: String, Codable, CaseIterable, Identifiable, Sendable {
     case supplement
     case override
 
@@ -133,7 +133,7 @@ enum CSVImportStrategy: String, Codable, CaseIterable, Identifiable {
     var detail: String { self == .supplement ? L.text("csv.strategy.supplement.detail") : L.text("csv.strategy.override.detail") }
 }
 
-struct CSVImportBatch: Identifiable, Codable, Hashable {
+struct CSVImportBatch: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     let name: String
     let createdAt: Date
@@ -168,6 +168,42 @@ struct YearSummary: Identifiable {
         guard let category = dailyActivities[date]?.category else { return nil }
         return topCategories.contains(category) ? category : .other
     }
+}
+
+/// The complete app-owned history required to restore Strivory after an app
+/// deletion. Apple Health remains the source of truth for live workouts; this
+/// snapshot is an app-local archive that lets the calendar be restored before
+/// Health access is granted again.
+struct ICloudBackupSnapshot: Codable, Sendable {
+    static let currentSchemaVersion = 1
+
+    var schemaVersion: Int = currentSchemaVersion
+    var updatedAt: Date
+    var healthArchive: [WorkoutRecord]
+    var importBatches: [CSVImportBatch]
+    /// UUID strings are used because they encode predictably as dictionary keys.
+    var deletedBatchDates: [String: Date]
+    var displayName: String
+    var displayNameUpdatedAt: Date
+
+    static func empty(displayName: String, displayNameUpdatedAt: Date = .now) -> Self {
+        Self(
+            updatedAt: .now,
+            healthArchive: [],
+            importBatches: [],
+            deletedBatchDates: [:],
+            displayName: displayName,
+            displayNameUpdatedAt: displayNameUpdatedAt
+        )
+    }
+}
+
+enum ICloudBackupState: Equatable {
+    case checking
+    case disabled
+    case ready(lastBackup: Date?)
+    case unavailable
+    case failed
 }
 
 enum CalendarSupport {

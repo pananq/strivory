@@ -70,6 +70,16 @@ struct ContentView: View {
             .sheet(item: $selectedActivity) { activity in
                 DayDetailView(activity: activity)
             }
+            .alert(L.text("icloud.restore.title"), isPresented: $store.iCloudRestoreAvailable) {
+                Button(L.text("icloud.restore.action")) {
+                    Task { await store.restoreICloudBackup() }
+                }
+                Button(L.text("icloud.restore.later"), role: .cancel) {
+                    store.dismissICloudRestorePrompt()
+                }
+            } message: {
+                Text(L.text("icloud.restore.message"))
+            }
         }
     }
 

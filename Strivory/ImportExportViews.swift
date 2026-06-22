@@ -89,6 +89,29 @@ struct SettingsView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+                Section(L.text("settings.iCloudSection")) {
+                    Toggle(L.text("settings.iCloudBackup"), isOn: $store.iCloudBackupEnabled)
+                    Text(L.text("settings.iCloudBackupHint"))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                    Label(store.iCloudBackupStatusText, systemImage: store.isSyncingICloud ? "arrow.triangle.2.circlepath" : "icloud")
+                        .foregroundStyle(.secondary)
+                    if store.iCloudBackupEnabled {
+                        Button {
+                            Task { await store.syncICloudBackup() }
+                        } label: {
+                            Label(L.text("icloud.syncNow"), systemImage: "arrow.triangle.2.circlepath")
+                        }
+                        .disabled(store.isSyncingICloud)
+                    }
+                    if store.hasICloudBackup && !store.iCloudBackupEnabled {
+                        Button {
+                            Task { await store.restoreICloudBackup() }
+                        } label: {
+                            Label(L.text("icloud.restore.action"), systemImage: "arrow.clockwise.icloud")
+                        }
+                    }
+                }
                 Section(L.text("settings.privacySection")) {
                     Label(L.text("settings.privacyLocal"), systemImage: "lock.shield")
                     Label(L.text("settings.privacyNoWrite"), systemImage: "heart.slash")

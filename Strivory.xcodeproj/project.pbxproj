@@ -19,6 +19,8 @@
 		A010 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B012 /* LaunchScreen.storyboard */; };
 		A011 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B013 /* Localizable.strings */; };
 		A012 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B016 /* InfoPlist.strings */; };
+		A013 /* CloudBackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B019 /* CloudBackupService.swift */; };
+		A014 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020 /* CloudKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		B015 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh-Hans; path = zh-Hans.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B017 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B018 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh-Hans; path = zh-Hans.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B019 /* CloudBackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudBackupService.swift; sourceTree = "<group>"; };
+		B020 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +50,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A008 /* HealthKit.framework in Frameworks */,
+				A014 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +76,7 @@
 				B005 /* AppStore.swift */,
 				B006 /* ContentView.swift */,
 				B007 /* ImportExportViews.swift */,
+				B019 /* CloudBackupService.swift */,
 				B008 /* Strivory.entitlements */,
 				B011 /* Assets.xcassets */,
 				B012 /* LaunchScreen.storyboard */,
@@ -84,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				B009 /* HealthKit.framework */,
+				B020 /* CloudKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -197,6 +204,7 @@
 				A005 /* AppStore.swift in Sources */,
 				A006 /* ContentView.swift in Sources */,
 				A007 /* ImportExportViews.swift in Sources */,
+				A013 /* CloudBackupService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
