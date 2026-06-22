@@ -93,7 +93,9 @@
 "icloud.error.account" = "Sign in to iCloud to back up or restore.";
 "icloud.error.malformed" = "The iCloud backup could not be read.";
 "icloud.error.configuration" = "iCloud Backup is not configured yet. Run the latest build from Xcode once, then deploy the CloudKit schema before TestFlight or App Store testing.";
+"icloud.error.container" = "The iCloud container is unavailable. In Xcode, confirm iCloud + CloudKit is enabled and the container is iCloud.com.pananq.strivory.";
 "icloud.error.generic" = "iCloud sync failed. Please try again later.";
+"icloud.error.genericDiagnostic" = "iCloud sync failed (%@).";
 "icloud.error.network" = "iCloud is temporarily unavailable. Check your network connection and try again.";
 "icloud.error.permission" = "This build is missing iCloud Backup permission. Reinstall the latest build from Xcode.";
 "icloud.restore.action" = "Restore Backup";

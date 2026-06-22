@@ -13,6 +13,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var hasICloudBackup = false
     @Published var iCloudRestoreAvailable = false
     @Published var healthMessage: String?
+    @Published private(set) var iCloudErrorMessage: String?
     @Published var language: AppLanguage {
         didSet { UserDefaults.standard.set(language.rawValue, forKey: AppLanguage.storageKey) }
     }
@@ -152,12 +153,13 @@ final class AppStore: ObservableObject {
             return date.map { L.text("icloud.status.ready", CalendarSupport.dateText($0, style: .short)) }
                 ?? L.text("icloud.status.readyWithoutDate")
         case .unavailable: return L.text("icloud.status.unavailable")
-        case .failed: return L.text("icloud.status.failed")
+        case .failed: return iCloudErrorMessage ?? L.text("icloud.status.failed")
         }
     }
 
     func prepareICloudBackup() async {
         iCloudBackupState = .checking
+        iCloudErrorMessage = nil
         guard await cloudBackup.isAccountAvailable() else {
             iCloudBackupState = .unavailable
             return
@@ -173,7 +175,7 @@ final class AppStore: ObservableObject {
                 : .disabled
         } catch {
             iCloudBackupState = .failed
-            healthMessage = iCloudFailureMessage(error)
+            recordICloudFailure(error)
         }
     }
 
@@ -186,12 +188,13 @@ final class AppStore: ObservableObject {
             applyBackupSnapshot(merged)
             hasICloudBackup = true
             iCloudBackupState = .ready(lastBackup: merged.updatedAt)
+            iCloudErrorMessage = nil
         } catch let error as ICloudBackupError where error == .accountUnavailable {
             iCloudBackupState = .unavailable
-            healthMessage = error.localizedDescription
+            recordICloudFailure(error)
         } catch {
             iCloudBackupState = .failed
-            healthMessage = iCloudFailureMessage(error)
+            recordICloudFailure(error)
         }
     }
 
@@ -207,12 +210,13 @@ final class AppStore: ObservableObject {
             iCloudBackupEnabled = true
             iCloudBackupState = .ready(lastBackup: merged.updatedAt)
             healthMessage = L.text("icloud.restore.success", merged.healthArchive.count, merged.importBatches.count)
+            iCloudErrorMessage = nil
         } catch let error as ICloudBackupError where error == .accountUnavailable {
             iCloudBackupState = .unavailable
-            healthMessage = error.localizedDescription
+            recordICloudFailure(error)
         } catch {
             iCloudBackupState = .failed
-            healthMessage = iCloudFailureMessage(error)
+            recordICloudFailure(error)
         }
     }
 
@@ -313,19 +317,27 @@ final class AppStore: ObservableObject {
             return backupError.localizedDescription
         }
         guard let cloudError = error as? CKError else {
-            return L.text("icloud.error.generic")
+            return L.text("icloud.error.genericDiagnostic", error.localizedDescription)
         }
         switch cloudError.code {
         case .notAuthenticated:
             return L.text("icloud.error.account")
         case .permissionFailure, .missingEntitlement:
             return L.text("icloud.error.permission")
+        case .badContainer:
+            return L.text("icloud.error.container")
         case .badDatabase, .invalidArguments, .serverRejectedRequest:
             return L.text("icloud.error.configuration")
         case .networkUnavailable, .networkFailure, .serviceUnavailable, .requestRateLimited, .zoneBusy, .accountTemporarilyUnavailable:
             return L.text("icloud.error.network")
         default:
-            return L.text("icloud.error.generic")
+            return L.text("icloud.error.genericDiagnostic", String(describing: cloudError.code))
         }
+    }
+
+    private func recordICloudFailure(_ error: Error) {
+        let message = iCloudFailureMessage(error)
+        iCloudErrorMessage = message
+        healthMessage = message
     }
 }
