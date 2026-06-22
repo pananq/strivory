@@ -92,6 +92,10 @@
 
 "icloud.error.account" = "未登录 iCloud，无法备份或恢复。";
 "icloud.error.malformed" = "iCloud 备份无法读取。";
+"icloud.error.configuration" = "iCloud 备份尚未完成配置。请先通过 Xcode 在真机运行最新版，再在 CloudKit 控制台部署 schema 后进行 TestFlight 或 App Store 测试。";
+"icloud.error.generic" = "iCloud 同步失败，请稍后重试。";
+"icloud.error.network" = "iCloud 暂时不可用，请检查网络后重试。";
+"icloud.error.permission" = "此构建缺少 iCloud 备份权限，请从 Xcode 重新安装最新版。";
 "icloud.restore.action" = "恢复备份";
 "icloud.restore.later" = "暂不恢复";
 "icloud.restore.message" = "将在此 iPhone 上恢复你的运动记录快照、CSV 导入批次和显示名称。之后可重新授权 Apple 健康以校验最新 Workout。";

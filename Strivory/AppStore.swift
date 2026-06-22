@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CloudKit
 
 @MainActor
 final class AppStore: ObservableObject {
@@ -172,6 +173,7 @@ final class AppStore: ObservableObject {
                 : .disabled
         } catch {
             iCloudBackupState = .failed
+            healthMessage = iCloudFailureMessage(error)
         }
     }
 
@@ -186,8 +188,10 @@ final class AppStore: ObservableObject {
             iCloudBackupState = .ready(lastBackup: merged.updatedAt)
         } catch let error as ICloudBackupError where error == .accountUnavailable {
             iCloudBackupState = .unavailable
+            healthMessage = error.localizedDescription
         } catch {
             iCloudBackupState = .failed
+            healthMessage = iCloudFailureMessage(error)
         }
     }
 
@@ -208,7 +212,7 @@ final class AppStore: ObservableObject {
             healthMessage = error.localizedDescription
         } catch {
             iCloudBackupState = .failed
-            healthMessage = error.localizedDescription
+            healthMessage = iCloudFailureMessage(error)
         }
     }
 
@@ -302,5 +306,26 @@ final class AppStore: ObservableObject {
     private func scheduleICloudSync() {
         guard iCloudBackupEnabled else { return }
         Task { await syncICloudBackup() }
+    }
+
+    private func iCloudFailureMessage(_ error: Error) -> String {
+        if let backupError = error as? ICloudBackupError {
+            return backupError.localizedDescription
+        }
+        guard let cloudError = error as? CKError else {
+            return L.text("icloud.error.generic")
+        }
+        switch cloudError.code {
+        case .notAuthenticated:
+            return L.text("icloud.error.account")
+        case .permissionFailure, .missingEntitlement:
+            return L.text("icloud.error.permission")
+        case .badDatabase, .invalidArguments, .serverRejectedRequest:
+            return L.text("icloud.error.configuration")
+        case .networkUnavailable, .networkFailure, .serviceUnavailable, .requestRateLimited, .zoneBusy, .accountTemporarilyUnavailable:
+            return L.text("icloud.error.network")
+        default:
+            return L.text("icloud.error.generic")
+        }
     }
 }
