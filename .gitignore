@@ -1,4 +1,24 @@
+# macOS
 .DS_Store
+
+# Xcode build products and per-user state
 DerivedData/
 build/
+*.xcarchive
+*.ipa
+*.dSYM/
+*.dSYM.zip
 xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+
+# Swift Package Manager local build state
+.build/
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+
+# Local workout-import files kept at the repository root.
+# Review fixtures and other documentation assets under docs/ remain trackable.
+/*.csv
+/*.numbers
