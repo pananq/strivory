@@ -19,6 +19,7 @@ final class AppStore: ObservableObject {
     }
     @Published var userName: String {
         didSet {
+            guard !isApplyingBackupSnapshot else { return }
             UserDefaults.standard.set(userName, forKey: Self.userNameKey)
             userNameUpdatedAt = .now
             UserDefaults.standard.set(userNameUpdatedAt, forKey: Self.userNameUpdatedAtKey)
@@ -37,13 +38,16 @@ final class AppStore: ObservableObject {
     private let cloudBackup = CloudBackupService()
     private static let batchesKey = "strivory.csv.batches"
     private static let healthArchiveKey = "strivory.health.archive"
+    private static let healthAnchorKey = "strivory.health.anchor"
     private static let deletedBatchDatesKey = "strivory.csv.deleted-batches"
     private static let userNameKey = "strivory.user.name"
     private static let userNameUpdatedAtKey = "strivory.user.name.updated-at"
     private static let iCloudBackupEnabledKey = "strivory.icloud-backup.enabled"
     private static let lastAutomaticICloudBackupKey = "strivory.icloud-backup.last-automatic"
     private var deletedBatchDates: [String: Date] = [:]
+    private var healthAnchorData: Data?
     private var userNameUpdatedAt: Date
+    private var isApplyingBackupSnapshot = false
 
     init() {
         language = AppLanguage(rawValue: UserDefaults.standard.string(forKey: AppLanguage.storageKey) ?? "") ?? .simplifiedChinese
@@ -52,6 +56,7 @@ final class AppStore: ObservableObject {
         iCloudBackupEnabled = UserDefaults.standard.bool(forKey: Self.iCloudBackupEnabledKey)
         loadBatches()
         loadHealthArchive()
+        loadHealthAnchor()
         loadDeletedBatchDates()
         Task { await prepareICloudBackup() }
     }
@@ -62,8 +67,15 @@ final class AppStore: ObservableObject {
         defer { isLoadingHealth = false }
         do {
             try await healthKit.requestAuthorization()
-            healthRecords = try await healthKit.fetchWorkouts()
-            mergeHealthArchive(with: healthRecords)
+            let result = try await healthKit.fetchWorkouts(anchorData: healthAnchorData)
+            if healthAnchorData == nil {
+                replaceHealthArchive(with: result.workouts)
+            } else {
+                applyHealthChanges(result.workouts, deletedIDs: result.deletedWorkoutIDs)
+            }
+            healthAnchorData = result.anchorData
+            UserDefaults.standard.set(result.anchorData, forKey: Self.healthAnchorKey)
+            healthRecords = healthArchive
             healthMessage = healthRecords.isEmpty
                 ? L.text("health.empty")
                 : L.text("health.updated", healthRecords.count)
@@ -214,13 +226,15 @@ final class AppStore: ObservableObject {
         isSyncingICloud = true
         defer { isSyncingICloud = false }
         do {
-            let merged = try await cloudBackup.sync(local: backupSnapshot())
-            applyBackupSnapshot(merged)
+            guard let remote = try await cloudBackup.load() else {
+                throw ICloudBackupError.malformedBackup
+            }
+            applyBackupSnapshot(remote)
             hasICloudBackup = true
             iCloudRestoreAvailable = false
             iCloudBackupEnabled = true
-            iCloudBackupState = .ready(lastBackup: merged.updatedAt)
-            healthMessage = L.text("icloud.restore.success", merged.healthArchive.count, merged.importBatches.count)
+            iCloudBackupState = .ready(lastBackup: remote.updatedAt)
+            healthMessage = L.text("icloud.restore.success", remote.healthArchive.count, remote.importBatches.count)
             iCloudErrorMessage = nil
         } catch let error as ICloudBackupError where error == .accountUnavailable {
             iCloudBackupState = .unavailable
@@ -268,10 +282,20 @@ final class AppStore: ObservableObject {
         return byID.values.sorted { $0.startDate < $1.startDate }
     }
 
-    private func mergeHealthArchive(with records: [WorkoutRecord]) {
+    private func replaceHealthArchive(with records: [WorkoutRecord]) {
+        healthArchive = records.sorted { $0.startDate < $1.startDate }
+        saveHealthArchive()
+    }
+
+    private func applyHealthChanges(_ records: [WorkoutRecord], deletedIDs: Set<UUID>) {
         var byID = Dictionary(uniqueKeysWithValues: healthArchive.map { ($0.id, $0) })
+        for id in deletedIDs { byID.removeValue(forKey: id) }
         for record in records { byID[record.id] = record }
         healthArchive = byID.values.sorted { $0.startDate < $1.startDate }
+        saveHealthArchive()
+    }
+
+    private func saveHealthArchive() {
         if let data = try? JSONEncoder().encode(healthArchive) {
             UserDefaults.standard.set(data, forKey: Self.healthArchiveKey)
         }
@@ -281,6 +305,11 @@ final class AppStore: ObservableObject {
         guard let data = UserDefaults.standard.data(forKey: Self.healthArchiveKey),
               let decoded = try? JSONDecoder().decode([WorkoutRecord].self, from: data) else { return }
         healthArchive = decoded
+        healthRecords = decoded
+    }
+
+    private func loadHealthAnchor() {
+        healthAnchorData = UserDefaults.standard.data(forKey: Self.healthAnchorKey)
     }
 
     private func saveDeletedBatchDates() {
@@ -308,13 +337,17 @@ final class AppStore: ObservableObject {
 
     private func applyBackupSnapshot(_ snapshot: ICloudBackupSnapshot) {
         healthArchive = snapshot.healthArchive
+        healthRecords = snapshot.healthArchive
         importBatches = snapshot.importBatches
         deletedBatchDates = snapshot.deletedBatchDates
+        isApplyingBackupSnapshot = true
         userName = snapshot.displayName
+        isApplyingBackupSnapshot = false
+        UserDefaults.standard.set(userName, forKey: Self.userNameKey)
         userNameUpdatedAt = snapshot.displayNameUpdatedAt
         UserDefaults.standard.set(userNameUpdatedAt, forKey: Self.userNameUpdatedAtKey)
         saveBatches()
-        mergeHealthArchive(with: snapshot.healthArchive)
+        saveHealthArchive()
         saveDeletedBatchDates()
     }
 

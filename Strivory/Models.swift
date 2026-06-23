@@ -232,7 +232,10 @@ enum CalendarSupport {
               let end = calendar.date(from: DateComponents(year: year + 1, month: 1, day: 1)) else { return 365 }
         let currentYear = calendar.component(.year, from: date)
         if year == currentYear {
-            return max(1, calendar.dateComponents([.day], from: start, to: min(date, end)).day ?? 1)
+            let today = calendar.startOfDay(for: min(date, end))
+            let elapsedDays = calendar.dateComponents([.day], from: start, to: today).day ?? 0
+            let totalDays = calendar.dateComponents([.day], from: start, to: end).day ?? 365
+            return min(totalDays, max(1, elapsedDays + 1))
         }
         return calendar.dateComponents([.day], from: start, to: end).day ?? 365
     }

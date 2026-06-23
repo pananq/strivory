@@ -11,6 +11,12 @@ enum HealthKitServiceError: LocalizedError {
     }
 }
 
+struct HealthKitFetchResult: Sendable {
+    let workouts: [WorkoutRecord]
+    let deletedWorkoutIDs: Set<UUID>
+    let anchorData: Data
+}
+
 @MainActor
 final class HealthKitService {
     private let store = HKHealthStore()
@@ -20,11 +26,14 @@ final class HealthKitService {
         try await store.requestAuthorization(toShare: [], read: [HKObjectType.workoutType()])
     }
 
-    func fetchWorkouts() async throws -> [WorkoutRecord] {
+    /// Fetches changes since the last saved HealthKit anchor. Passing `nil`
+    /// performs the one-time initial history import.
+    func fetchWorkouts(anchorData: Data?) async throws -> HealthKitFetchResult {
         guard HKHealthStore.isHealthDataAvailable() else { throw HealthKitServiceError.unavailable }
         let type = HKObjectType.workoutType()
+        let anchor = Self.decodeAnchor(anchorData)
         return try await withCheckedThrowingContinuation { continuation in
-            let query = HKSampleQuery(sampleType: type, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]) { _, samples, error in
+            let query = HKAnchoredObjectQuery(type: type, predicate: nil, anchor: anchor, limit: HKObjectQueryNoLimit) { _, samples, deletedObjects, newAnchor, error in
                 if let error {
                     continuation.resume(throwing: error)
                     return
@@ -35,7 +44,15 @@ final class HealthKitService {
                     let energy = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
                     return WorkoutRecord(id: workout.uuid, startDate: workout.startDate, category: Self.category(for: workout.workoutActivityType), duration: duration, activeEnergy: energy, source: .healthKit)
                 }
-                continuation.resume(returning: Self.deduplicated(workouts))
+                guard let newAnchor, let encodedAnchor = Self.encodeAnchor(newAnchor) else {
+                    continuation.resume(throwing: HealthKitServiceError.unavailable)
+                    return
+                }
+                continuation.resume(returning: HealthKitFetchResult(
+                    workouts: Self.deduplicated(workouts),
+                    deletedWorkoutIDs: Set((deletedObjects ?? []).map(\.uuid)),
+                    anchorData: encodedAnchor
+                ))
             }
             self.store.execute(query)
         }
@@ -71,13 +88,18 @@ final class HealthKitService {
     }
 
     nonisolated private static func deduplicated(_ records: [WorkoutRecord]) -> [WorkoutRecord] {
-        records.sorted { $0.startDate < $1.startDate }.reduce(into: [WorkoutRecord]()) { accepted, candidate in
-            let duplicate = accepted.contains { existing in
-                existing.category == candidate.category &&
-                abs(existing.startDate.timeIntervalSince(candidate.startDate)) <= 120 &&
-                abs(existing.duration - candidate.duration) <= 300
-            }
-            if !duplicate { accepted.append(candidate) }
-        }
+        var seenIDs = Set<UUID>()
+        return records
+            .filter { seenIDs.insert($0.id).inserted }
+            .sorted { $0.startDate < $1.startDate }
+    }
+
+    nonisolated private static func decodeAnchor(_ data: Data?) -> HKQueryAnchor? {
+        guard let data else { return nil }
+        return try? NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: data)
+    }
+
+    nonisolated private static func encodeAnchor(_ anchor: HKQueryAnchor) -> Data? {
+        try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
     }
 }
